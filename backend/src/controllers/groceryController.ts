@@ -42,6 +42,13 @@ export const searchItem = async (req: Request, res: Response, next: NextFunction
         }
         fullData.push(fullProduct);
     }
+
+    const sortedProducts = fullData.sort((a, b) => {
+        const ratingA = a.rating ?? -Infinity; 
+        const ratingB = b.rating ?? -Infinity; 
     
-    res.status(200).json(fullData);
+        return ratingB - ratingA; 
+    });
+    
+    res.status(200).json(sortedProducts);
 }

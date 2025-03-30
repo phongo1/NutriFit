@@ -113,6 +113,22 @@ export async function updateNutritionPlan(req: Request, res: Response, next: Nex
   // TODO: stub
 }
 
+// export async function deleteSavedItem(req: Request, res: Response, next: NextFunction): Promise<void> {
+//   try {
+//     const userId = req.body.userId;
+//     const item = req.body.item;
+//     if (!userId || !item) {
+//       res.status(400).json({ error: "User ID and item name are required" });
+//       return;
+//     }
+//     await connectDB();
+//     const upc = item.upc;
+//     const savedItem = await User.findOneAndUpdate(
+//       { _id: userId },
+//       { $pull: { saveditems: { upc: upc } } },
+
+//   }
+
 export async function addSavedItem(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
     const userId = req.body.userId;
