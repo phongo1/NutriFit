@@ -8,6 +8,7 @@ const models = {
   };
   
 //   product schema:
+
 //   serving_weight_grams,
 //   nf_metric_qty,
 //   nf_metric_uom,
@@ -73,7 +74,7 @@ function scoreBulkingProteinFocused(product) {    //focus on protein, carbs, and
   
     // Normalize serving weight
     const servingGrams = normalizeServingGrams(serving_weight_grams, nf_metric_qty, nf_metric_uom);
-    if (!servingGrams || hasMissingNutrients(fat, protein, carbs, sugars, sodium, cholesterol)) return "N/A";
+    if (!servingGrams || hasMissingNutrients(fat, protein, carbs, sugars, sodium, cholesterol)) return null;
   
     // Convert to % of serving weight
     const fatPct = (fat / servingGrams) * 100;
@@ -145,7 +146,7 @@ function scoreBulkingProteinFocused(product) {    //focus on protein, carbs, and
     } = product;
   
     const servingGrams = normalizeServingGrams(serving_weight_grams, nf_metric_qty, nf_metric_uom);
-    if (!servingGrams || hasMissingNutrients(fat, protein, carbs, sugars, sodium, cholesterol)) return "N/A";
+    if (!servingGrams || hasMissingNutrients(fat, protein, carbs, sugars, sodium, cholesterol)) return null;
   
     const fatPct = (fat / servingGrams) * 100;
     const proteinPct = (protein / servingGrams) * 100;
@@ -206,7 +207,7 @@ function scoreBulkingProteinFocused(product) {    //focus on protein, carbs, and
       } = product;
   
     const servingGrams = normalizeServingGrams(serving_weight_grams, nf_metric_qty, nf_metric_uom);
-    if (!servingGrams || hasMissingNutrients(fat, protein, carbs, sugars, sodium, cholesterol)) return "N/A";
+    if (!servingGrams || hasMissingNutrients(fat, protein, carbs, sugars, sodium, cholesterol)) return null;
   
     const netCarbs = Math.max(carbs - fiber, 0);
   
@@ -282,7 +283,7 @@ function scoreBulkingProteinFocused(product) {    //focus on protein, carbs, and
     } = product;
   
     const servingGrams = normalizeServingGrams(serving_weight_grams, nf_metric_qty, nf_metric_uom);
-    if (!servingGrams || hasMissingNutrients(fat, protein, carbs, sugars, sodium, cholesterol)) return "N/A";
+    if (!servingGrams || hasMissingNutrients(fat, protein, carbs, sugars, sodium, cholesterol)) return null;
   
     const fatPct = (fat / servingGrams) * 100;
     const proteinPct = (protein / servingGrams) * 100;
