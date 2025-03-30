@@ -12,7 +12,7 @@ export const searchItem = async (req: Request, res: Response, next: NextFunction
     }
 
     const zipCode: number = 22903;
-    const searchLimit: number = req.body.searchLimit || 2; 
+    const searchLimit: number = req.body.searchLimit || 4; 
     const searchResults: CleanKrogerProductData  = await getProducts(zipCode, searchTerm, searchLimit);
     const almostFullData = await combineProductWithNutrinix(searchResults);
     const fullData: FullyFinishedProduct[] = [];
