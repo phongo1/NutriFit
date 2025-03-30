@@ -1,13 +1,9 @@
-import type { Route } from "./+types/home";
-import { Welcome } from "../welcome/welcome";
+import { useEffect } from "react";
 
-export function meta({}: Route.MetaArgs) {
-  return [
-    { title: "New React Router App" },
-    { name: "description", content: "Welcome to React Router!" },
-  ];
-}
+useEffect(() => {
+  document.title = "NutriFit";
+}, []);
 
 export default function Home() {
-  return <Welcome />;
+  return <>Home</>;
 }
