@@ -4,16 +4,6 @@ import { CleanKrogerProductData, FullyFinishedProduct } from '../types';
 import { combineProductWithNutrinix } from '../utils/NutrinixApi';
 import { getScore } from '../../helpers/scoreAlgorithms';
 
-interface RequestBody {
-    searchTerm: string;
-    searchLimit: string;
-  }
-
-interface RequestBody {
-    searchTerm: string;
-    searchLimit: string;
-  }
-
 export const searchItem = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     const searchTerm = req.query.searchTerm as string;
     if (!searchTerm) {
@@ -21,8 +11,8 @@ export const searchItem = async (req: Request, res: Response, next: NextFunction
         return;
     }
 
-    const zipCode: number = 22903; // TODO: get this from the user
-    const searchLimit: number = req.body.searchLimit || 4; 
+    const zipCode: number = 22903;
+    const searchLimit: number = req.body.searchLimit || 2; 
     const searchResults: CleanKrogerProductData  = await getProducts(zipCode, searchTerm, searchLimit);
     const almostFullData = await combineProductWithNutrinix(searchResults);
     const fullData: FullyFinishedProduct[] = [];

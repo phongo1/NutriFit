@@ -12,10 +12,10 @@ export async function createUser(req: Request, res: Response, next: NextFunction
       return;
     }
 
-    // Connect to the database
+
     await connectDB();
+
     // Check if the username already exists
-    
     const existingUser = await User.findOne({ username });
     if (existingUser) {
       res.status(400).json({ error: "Username already exists"});
@@ -31,7 +31,6 @@ export async function createUser(req: Request, res: Response, next: NextFunction
       saveditems: [],
     });
     const result = await newUser.save();
-    // const user = await collections.users?.findOne({ _id: result?.insertedId });
 
     res.status(201).json({ 
       userId: result._id,
@@ -48,9 +47,6 @@ export async function createUser(req: Request, res: Response, next: NextFunction
     res.status(500).send("Failed to create user");
   }
 }
-
-
-
 
 export async function loginUser(req: Request, res: Response, next: NextFunction): Promise<void> {
 
