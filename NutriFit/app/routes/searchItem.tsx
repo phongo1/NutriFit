@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import NavBar from "~/components/navBar";
 import searchIcon from "~/assets/search.png";
 import SearchGetStarted from "~/components/placeHolders/searchGetStarted";
@@ -6,6 +6,8 @@ import ProductCard from "~/components/productCard";
 import ProductModal from "~/components/productModal";
 import { useAccount } from "~/persistence/accountContext";
 import { useNavigate } from "react-router";
+import { HashLoader } from "react-spinners";
+
 interface NutritionItem {
   description: string;
   price: number;
@@ -32,15 +34,22 @@ export default function SearchItem() {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<NutritionItem[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const [selectedProduct, setSelectedProduct] = useState<NutritionItem | null>(
-    null
-  );
+  const [loading, setLoading] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<NutritionItem | null>(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!account) {
+      navigate("/"); // redirect home if not logged in
+    }
+  }, [account]);
 
   const handleSearch = async () => {
     if (!query.trim()) return;
 
     try {
       setError(null);
+      setLoading(true);
       console.log(`Searching for: ${query}`);
 
       const res = await fetch(
@@ -61,35 +70,37 @@ export default function SearchItem() {
     } catch (err) {
       console.error(err);
       setError("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
-  const navigate = useNavigate();
-  const onSave = async (userId: any, item: NutritionItem) => {
-    try {
-        const response = await fetch("http://localhost:3636/api/user/addSavedItem", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ userId, item }),
-        });
-
-        if (!response.ok) {
-            throw new Error(`Failed to save item: ${response.statusText}`);
-        }
-
-        const data = await response.json();
-        console.log("Item saved successfully:", data);
-        navigate("/profile");
-    } catch (error) {
-        console.error("Error saving item:", error);
-    }
-};
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       e.preventDefault();
       handleSearch();
+    }
+  };
+
+  const onSave = async (userId: any, item: NutritionItem) => {
+    try {
+      const response = await fetch("http://localhost:3636/api/user/addSavedItem", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ userId, item }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to save item: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      console.log("Item saved successfully:", data);
+      navigate("/profile");
+    } catch (error) {
+      console.error("Error saving item:", error);
     }
   };
 
@@ -115,7 +126,16 @@ export default function SearchItem() {
 
         {error && <p className="text-red-500 mt-4">{error}</p>}
 
-        {!error && results.length === 0 && (
+        {loading && (
+          <div className="flex flex-col items-center mt-[5rem]">
+            <HashLoader color="#2563eb" size={50} />
+            <p className="text-lg text-[var(--color-text-secondary)] mt-4">
+              Calculating the best products for you...
+            </p>
+          </div>
+        )}
+
+        {!loading && results.length === 0 && (
           <div className="mt-12">
             <SearchGetStarted />
           </div>
@@ -143,7 +163,7 @@ export default function SearchItem() {
                   rating={Math.round(item.rating)}
                   brand={item.brand}
                   description={item.description}
-                />{" "}
+                />
               </div>
             ))}
           </div>
