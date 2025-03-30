@@ -1,16 +1,7 @@
 import dotenv from 'dotenv';
+import { Config } from '../types';
 
 dotenv.config();
-
-interface Config {
-  port: number;
-  nodeEnv: string;
-  clientId: string;
-  clientSecret: string;
-  redirectUri: string;
-  scope: string;
-  oauthUrl: string;
-}
 
 const config: Config = {
   port: Number(process.env.PORT) || 3000,
