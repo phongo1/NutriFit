@@ -22,8 +22,8 @@ const models: AlgorithmModels = {
 //   nf_sodium: sodium = 0,
 //   nf_cholesterol: cholesterol = 0
   // Dynamic scoring function
-  export function getScore(goal: string, product: AlmostFinishedProduct) {
-    if (!models[goal]) return "Invalid goal selected";
+  export function getScore(goal: string, product: AlmostFinishedProduct): number | null {
+    if (!models[goal]) throw new Error(`Unknown goal: ${goal}`);
     return models[goal](product);
   }
 
