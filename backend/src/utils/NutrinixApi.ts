@@ -1,6 +1,7 @@
 import config from '../config/config';
 import fetch from 'node-fetch';
 import { NutrinixReponse, CleanKrogerProductData, FullyFinishedProduct } from '../types';
+import { getBarcode } from './UpcCalculator';
 
 export async function combineProductWithNutrinix(productData: CleanKrogerProductData): Promise<FullyFinishedProduct[]> {
   const nutritionixApiKey = config.nutritionixApiKey;
@@ -13,8 +14,9 @@ export async function combineProductWithNutrinix(productData: CleanKrogerProduct
     const { description, price, brand } = infoMap[0];
 
     // calculate the upc
+    const upcCode = getBarcode(upc);
 
-    const url = `${nutritionixUrl}${upc}`;
+    const url = `${nutritionixUrl}${upcCode}`;
     const headers = {
       'x-app-id': nutritionixAppId,
       'x-app-key': nutritionixApiKey,
@@ -23,7 +25,7 @@ export async function combineProductWithNutrinix(productData: CleanKrogerProduct
     const response  = await fetch(url, { method: 'GET', headers });
 
     if (response.status == 404) {
-      console.log(`No nutritionix data found for ${upc}`);
+      console.log(`No nutritionix data found for ${upcCode}`);
       continue;
     }
 
@@ -37,7 +39,7 @@ export async function combineProductWithNutrinix(productData: CleanKrogerProduct
       const fullData: FullyFinishedProduct = {
         "description": description,
         "price": price,
-        "upc": upc,
+        "upc": upcCode,
         "brand": brand,
         "serving_weight_grams": data.serving_weight_grams,
         "nf_metric_qty": data.nf_metric_qty,
