@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { getProducts } from '../utils/KrogerApi';
 import { CleanKrogerProductData, FullyFinishedProduct } from '../types';
 import { combineProductWithNutrinix } from '../utils/NutrinixApi';
-// import { getScore } from '../../helpers/scoreAlgorithms';
+import { getScore } from '../../helpers/scoreAlgorithms';
 
 interface RequestBody {
     searchTerm: string;
@@ -49,5 +49,5 @@ export const searchItem = async (req: Request, res: Response, next: NextFunction
         fullData.push(fullProduct);
     }
     
-    res.status(200).json(almostFullData);
+    res.status(200).json(fullData);
 }
