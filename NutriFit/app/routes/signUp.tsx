@@ -1,5 +1,9 @@
 import axios from "axios";
 
-export default function Home() {
-  return <>signUp</>;
+export default function SignUp() {
+    return (
+        <div>
+          SignUp
+        </div>
+    );
 }
