@@ -1,4 +1,3 @@
-import dotenv from 'dotenv';
 import config from '../config/config';
 import buffer from 'buffer';
 import fetch from 'node-fetch';
@@ -8,10 +7,17 @@ interface AccessTokenResponse {
   expires_in: number;
 }
 
+interface LocationDataResponse {
+  data: Array<{ "locationId": string}>;
+};
+
+
+let locationId: string | null = null;
 let accessToken: string | null = null;
 let tokenExpiresAt: number | null = null;
 
-async function fetchAccessToken() {
+
+async function fetchAccessToken(): Promise<void> {
   const clientId = config.clientId;
   const clientSecret = config.clientSecret;
   const response = await fetch(`${config.oauthUrl}/token`, {
@@ -34,10 +40,62 @@ async function fetchAccessToken() {
   tokenExpiresAt = Date.now() + (data.expires_in * 1000);
   
 
-async function ensureAccessToken() {
+async function ensureAccessToken(): Promise<void> {
   if (!accessToken || !tokenExpiresAt || Date.now() >= tokenExpiresAt) {
     await fetchAccessToken();
   }
+}
+
+async function fetchLocationId(zipCode: number): Promise<void> {
+  await ensureAccessToken();
+  const response = await fetch (`https://api.kroger.com/v1/locations?filter.zipCode.near=${zipCode}`, {
+    method: 'GET',
+    headers: {
+      "Accept": "application/json",
+      "Authorization": "Bearer " + accessToken
+    }
+  });
+
+  if (!response.ok) {
+    throw new Error(`Error fetching location ID: ${response.statusText}`);
+  }
+
+  const data = await response.json() as LocationDataResponse;
+  locationId = data.data[0].locationId;
+  if (!locationId) {
+    throw new Error('No location ID found');
+  }
+}
+
+async function getProducts(locationId: string, searchTerm: string, searchLimit: number = 10): Promise<Array<Map<string, number>>> {
+  await ensureAccessToken();
+  const encodedSearchTerm = encodeURIComponent(searchTerm);
+  const encodedLocationId = encodeURIComponent(locationId);
+  const encodedSearchLimit = encodeURIComponent(searchLimit.toString());
+  const encodedAccessToken = encodeURIComponent(accessToken as string);
+
+  const response = await fetch(`https://api.kroger.com/v1/products?filter.locationId=${encodedLocationId}&filter.term=${encodedSearchTerm}&filter.limit=${encodedSearchLimit}}`, {
+    method: 'GET',
+    headers: {
+      "Accept": "application/json",
+      "Authorization": "Bearer " + encodedAccessToken
+    }
+  });
+
+  if (!response.ok) {
+    throw new Error(`Error fetching products: ${response.statusText}`);
+  }
+
+  let result: Array<Map<string, number>> = [];
+  const json = await response.json() as { data: Array<Map<string, Map<string, string>>> }; // {upc: {description: string, price: number}}
+  const products = json.data;
+  for (const product of products) {
+    // description, price, upc
+  }
+  return result;
+
+
+
 }
 
 // async function saveAccessToken(token: string, expiresIn: number) {
@@ -90,6 +148,5 @@ async function ensureAccessToken() {
 //     throw new Error(`tokenResponse failed with status ${tokenResponse.status}`);
 //   }
 
-  return await tokenResponse.json();
-
+  // return await tokenResponse.json();
 }
