@@ -58,6 +58,25 @@ export interface NutrinixReponse {
   "photo": {"thumb": string | null},
 }
 
+export interface AlmostFinishedProduct {
+  "description": string;
+  "price": number;
+  "upc": string;
+  "brand": string;
+  "serving_weight_grams": number | null,
+  "nf_metric_qty": number | null,
+  "nf_metric_uom": string | null,
+  "nf_total_fat": number | null,
+  "nf_saturated_fat": number | null,
+  "nf_protein": number | null,
+  "nf_total_carbohydrate": number | null,
+  "nf_dietary_fiber": number | null,
+  "nf_sugars": number | null,
+  "nf_sodium": number | null,
+  "nf_cholesterol": number | null,
+  "photo": string | null
+}
+
 export interface FullyFinishedProduct {
   "description": string;
   "price": number;
@@ -75,4 +94,5 @@ export interface FullyFinishedProduct {
   "nf_sodium": number | null,
   "nf_cholesterol": number | null,
   "photo": string | null
+  "rating": number | null;
 };
