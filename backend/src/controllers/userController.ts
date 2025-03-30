@@ -46,14 +46,14 @@ if(!user || user.password !== password){
  }
 }
 
-async function getSavedItems(req: Request, res: Response, next: NextFunction): Promise<void> {
+export async function getSavedItems(req: Request, res: Response, next: NextFunction): Promise<void> {
   // TODO: stub
 }
 
-async function updateNutritionPlan(req: Request, res: Response, next: NextFunction): Promise<void> {
+export async function updateNutritionPlan(req: Request, res: Response, next: NextFunction): Promise<void> {
   // TODO: stub
 }
 
-async function addSavedItem(req: Request, res: Response, next: NextFunction): Promise<void> {
+export async function addSavedItem(req: Request, res: Response, next: NextFunction): Promise<void> {
   // TODO: stub
 }
