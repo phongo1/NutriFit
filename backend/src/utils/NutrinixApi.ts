@@ -1,6 +1,6 @@
 import config from '../config/config';
 import fetch from 'node-fetch';
-import { NutrinixReponse, CleanKrogerProductData, AlmostFinishedProduct } from '../types';
+import { NutrinixReponseMain,  NutrinixReponse, CleanKrogerProductData, FullyFinishedProduct } from '../types';
 import { getBarcode } from './UpcCalculator';
 
 export async function combineProductWithNutrinix(productData: CleanKrogerProductData): Promise<AlmostFinishedProduct[]> {
@@ -9,9 +9,11 @@ export async function combineProductWithNutrinix(productData: CleanKrogerProduct
   const nutritionixUrl = config.nutritionixUrl;
   const result: AlmostFinishedProduct[] = [];
 
-  for (const upc in productData) {
-    const infoMap = productData[upc];
-    const { description, price, brand } = infoMap[0];
+  for (let i = 0; i < productData.length; i++) {
+    const product = productData[i];
+    const upc = Object.keys(product)[0];
+
+    const info = product[upc];
 
     // calculate the upc
     const upcCode = getBarcode(upc);
@@ -35,28 +37,30 @@ export async function combineProductWithNutrinix(productData: CleanKrogerProduct
     }
 
     else {
-      const data = await response.json() as NutrinixReponse;
-      const fullData: AlmostFinishedProduct = {
-        "description": description,
-        "price": price,
+      const data = await response.json() as NutrinixReponseMain;
+      const foodData = data.foods;
+      const nutriInfo = foodData[0];
+
+      const fullData: FullyFinishedProduct = {
+        "description": info.description,
+        "price": info.price,
         "upc": upcCode,
-        "brand": brand,
-        "serving_weight_grams": data.serving_weight_grams,
-        "nf_metric_qty": data.nf_metric_qty,
-        "nf_metric_uom": data.nf_metric_uom,
-        "nf_total_fat": data.nf_total_fat,
-        "nf_saturated_fat": data.nf_saturated_fat,
-        "nf_protein": data.nf_protein,
-        "nf_total_carbohydrate": data.nf_total_carbohydrate,
-        "nf_dietary_fiber": data.nf_dietary_fiber,
-        "nf_sugars": data.nf_sugars,
-        "nf_sodium": data.nf_sodium,
-        "nf_cholesterol": data.nf_cholesterol,
-        "photo": data.photo.thumb
+        "brand": info.brand,
+        "serving_weight_grams": nutriInfo.serving_weight_grams? nutriInfo.serving_weight_grams : null,
+        "nf_metric_qty": nutriInfo.nf_metric_qty,
+        "nf_metric_uom": nutriInfo.nf_metric_uom,
+        "nf_total_fat": nutriInfo.nf_total_fat,
+        "nf_saturated_fat": nutriInfo.nf_saturated_fat,
+        "nf_protein": nutriInfo.nf_protein,
+        "nf_total_carbohydrate": nutriInfo.nf_total_carbohydrate,
+        "nf_dietary_fiber": nutriInfo.nf_dietary_fiber,
+        "nf_sugars": nutriInfo.nf_sugars,
+        "nf_sodium": nutriInfo.nf_sodium,
+        "nf_cholesterol": nutriInfo.nf_cholesterol,
+        "photo": nutriInfo.photo ? nutriInfo.photo.thumb : null,
       }
       result.push(fullData);
   }
-
   }
   return result;
 }

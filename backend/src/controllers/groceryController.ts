@@ -2,10 +2,21 @@ import { Request, Response, NextFunction } from 'express';
 import { getProducts } from '../utils/KrogerApi';
 import { CleanKrogerProductData, FullyFinishedProduct } from '../types';
 import { combineProductWithNutrinix } from '../utils/NutrinixApi';
-import { getScore } from '../../helpers/scoreAlgorithms';
+// import { getScore } from '../../helpers/scoreAlgorithms';
+
+interface RequestBody {
+    searchTerm: string;
+    searchLimit: string;
+  }
+
+interface RequestBody {
+    searchTerm: string;
+    searchLimit: string;
+  }
 
 export const searchItem = async (req: Request, res: Response, next: NextFunction) => {
-    const { searchTerm } = req.body;
+    const searchTerm  = req.body.searchTerm;
+    console.log(searchTerm);
     const zipCode: number = 22903; // TODO: get this from the user
     const searchLimit: number = req.body.searchLimit || 10; 
     const searchResults: CleanKrogerProductData  = await getProducts(zipCode, searchTerm, searchLimit);

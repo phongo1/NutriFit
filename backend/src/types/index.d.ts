@@ -93,6 +93,9 @@ export interface FullyFinishedProduct {
   "nf_sugars": number | null,
   "nf_sodium": number | null,
   "nf_cholesterol": number | null,
-  "photo": string | null
-  "rating": number | null;
+  "photo": string | null,
+  "rating": number | null
 };
+export interface NutrinixReponseMain {
+  "foods": Array<NutrinixReponse>;
+}

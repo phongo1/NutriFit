@@ -4,7 +4,7 @@ import fetch from 'node-fetch';
 import { AccessTokenResponse, ProductDataResponse, LocationDataResponse, ProductObject, InformationMap, CleanKrogerProductData } from '../types';
 
 // Storing access token and location ID in memory
-let locationId: string | null = null;
+let locationId: string | null = '09700177';
 let accessToken: string | null = null;
 let tokenExpiresAt: number | null = null;
 
@@ -16,10 +16,12 @@ async function fetchAccessToken(): Promise<void> {
     method: 'POST',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
-      'Authorization': `Basic ${buffer.Buffer.from(`${clientId}:${clientSecret}`).toString('base64')}`,
+      'Authorization': 'Basic ' + buffer.Buffer.from(`${clientId}:${clientSecret}`).toString('base64'),
+
     },
     body: new URLSearchParams({
-      grant_type: 'client_credentials'
+      grant_type: 'client_credentials',
+      scope: 'product.compact',
     }),
   })
 
@@ -62,6 +64,7 @@ async function fetchLocationId(zipCode: number): Promise<void> {
 }
 
 export async function getProducts(zipCode: number, searchTerm: string, searchLimit: number = 10): Promise<CleanKrogerProductData> {
+  console.log("This is the search term" + searchTerm)
   await ensureAccessToken();
   if (!locationId) {
     await fetchLocationId(zipCode);
@@ -73,14 +76,16 @@ export async function getProducts(zipCode: number, searchTerm: string, searchLim
   const encodedSearchTerm = encodeURIComponent(searchTerm);
   const encodedLocationId = encodeURIComponent(locationId);
   const encodedSearchLimit = encodeURIComponent(searchLimit.toString());
-  const encodedAccessToken = encodeURIComponent(accessToken as string);
+  // const encodedAccessToken = encodeURIComponent(accessToken as string);
+  console.log(`Access Token: ${accessToken}`);
+  // accessToken = 'eyJhbGciOiJSUzI1NiIsImprdSI6Imh0dHBzOi8vYXBpLmtyb2dlci5jb20vdjEvLndlbGwta25vd24vandrcy5qc29uIiwia2lkIjoiWjRGZDNtc2tJSDg4aXJ0N0xCNWM2Zz09IiwidHlwIjoiSldUIn0.eyJhdWQiOiJudXRyaWZpdC0yNDMyNjEyNDMwMzQyNDU5NDY2NzM5MmU1NTUxN2E2NzQyNjU1MTU0MzQ1YTMyNGI3ODc0NTc2MTRmNDEzNTQ2NTI3NzM2NGQ3OTQ1NDc3NzUyN2E1NzczNTQ0YTM2NTg3OTRkNjI0NjM5MmY1ODMwNmYzNTM2NTMxOTAyNjk5NzE4NTYxMjUxNTgxIiwiZXhwIjoxNzQzMzI4NDY3LCJpYXQiOjE3NDMzMjY2NjIsImlzcyI6ImFwaS5rcm9nZXIuY29tIiwic3ViIjoiMDE5YzAzMWQtNjcyZS01MDBhLWI4N2YtYTczYjUxM2E2OTNmIiwic2NvcGUiOiJwcm9kdWN0LmNvbXBhY3QiLCJhdXRoQXQiOjE3NDMzMjY2Njc3Mzg2NjQ4NzYsImF6cCI6Im51dHJpZml0LTI0MzI2MTI0MzAzNDI0NTk0NjY3MzkyZTU1NTE3YTY3NDI2NTUxNTQzNDVhMzI0Yjc4NzQ1NzYxNGY0MTM1NDY1Mjc3MzY0ZDc5NDU0Nzc3NTI3YTU3NzM1NDRhMzY1ODc5NGQ2MjQ2MzkyZjU4MzA2ZjM1MzY1MzE5MDI2OTk3MTg1NjEyNTE1ODEifQ.S0OJct9qHXVHFbm5ngRD8nQXpHqhAdT-W57WAkWuEIzWbcRRxsHShFBZxV83rue1w6WqyFxnRnqEAk00SqgPJLxebiG3K2iO1Ish2_G7XvHe9OBSKP_XclYh4hpZrllB2NaDXd9FIdE1Kq3V6kAd27_8flUufIyeluTo8m3k24zgPTVaHP8bBF9pY6dtCAgfSerOm9Wdcv9_Odae4_SNX55-aFJZ5lLx_BqDLP6lR_f83NMrHLUzvbCX35DxSMnnPgbg2m7T9e4Y-ILD_742052-pR5Gaperk6YOEsWwa6DcOk3UJ0OMF4nvMjNbdLBUeYZopdG7YSWJCcroGmEoZg'
   const url = `https://api.kroger.com/v1/products?filter.locationId=${encodedLocationId}&filter.term=${encodedSearchTerm}&filter.limit=${encodedSearchLimit}`;
 
   const response = await fetch(url, {
     method: 'GET',
     headers: {
       "Accept": "application/json",
-      "Authorization": "Bearer " + encodedAccessToken
+      "Authorization": "Bearer " +  accessToken,
     }
   });
 
@@ -91,7 +96,6 @@ export async function getProducts(zipCode: number, searchTerm: string, searchLim
   let result: CleanKrogerProductData = [];
   const json = await response.json() as ProductDataResponse;
   const products = json.data as Array<ProductObject>;
-
   for (const product of products) {
 
     const description = product.description;
