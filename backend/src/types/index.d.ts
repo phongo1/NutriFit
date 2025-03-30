@@ -96,6 +96,11 @@ export interface FullyFinishedProduct {
   "photo": string | null,
   "rating": number | null
 };
+
 export interface NutrinixReponseMain {
   "foods": Array<NutrinixReponse>;
+}
+
+export interface AlgorithmModels {
+  [key: string]: (product: AlmostFinishedProduct) => number | null;
 }

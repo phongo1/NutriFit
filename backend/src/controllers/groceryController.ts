@@ -16,7 +16,6 @@ interface RequestBody {
 
 export const searchItem = async (req: Request, res: Response, next: NextFunction) => {
     const searchTerm  = req.body.searchTerm;
-    console.log(searchTerm);
     const zipCode: number = 22903; // TODO: get this from the user
     const searchLimit: number = req.body.searchLimit || 10; 
     const searchResults: CleanKrogerProductData  = await getProducts(zipCode, searchTerm, searchLimit);
@@ -50,6 +49,5 @@ export const searchItem = async (req: Request, res: Response, next: NextFunction
         fullData.push(fullProduct);
     }
     
-    res.status(200).json(fullData);
-    return fullData;
+    res.status(200).json(almostFullData);
 }
