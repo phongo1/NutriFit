@@ -2,8 +2,9 @@ import { useEffect } from "react";
 import NavBar from "../components/navBar";
 import landingPage from "../assets/landingPage.png";
 import stepLine from "../assets/stepLine.png"
-
+import { useNavigate } from "react-router";
 export default function Home() {
+  const navigate = useNavigate();
   useEffect(() => {
     document.title = "NutriFit";
   }, []);
@@ -16,6 +17,12 @@ export default function Home() {
         <div className="flex flex-col w-[24rem] gap-4">
           <h1 className='text-5xl font-bold text-left text-[var(--color-text)]'>Optimize your Health Goals.</h1>
           <p className='text-lg text-left text-[var(--color-text)]'>Get the best branded foods by the macros that matter to you.</p>
+          <button 
+                className="bg-[var(--color-accent)] text-white font-bold w-[10rem] mt-6 py-2 px-4 rounded hover:scale-105 transition duration-200 shadow-md hover:shadow-lg cursor-pointer" 
+                onClick={() => {navigate("/login")}}
+            >
+                Get Started
+          </button>
         </div>
         <img src={landingPage} alt="Landing Page" className='w-[30rem] h-auto' />
       </div>

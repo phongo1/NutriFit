@@ -12,7 +12,12 @@ export default function Login() {
   const [error, setError] = useState<string | null>(null);
 
   const handleSignupClick = () => {
-    navigate("/signup");
+    // navigate("/signup");
+
+    // SHORTCUT TO SIGNUP FOR TESTING REMOVE LATER
+    // TODO:
+    setAccount({name: 'steve', userId: '1234', nutritionGoal: 'bulking'});
+    navigate("/searchItem")
   }
 
   const handleLogin = async () => {
