@@ -97,8 +97,9 @@ export async function getProducts(zipCode: number, searchTerm: string, searchLim
     const description = product.description;
     const price = product.items[0].price.regular;
     const upc = product.upc;
+    const brand = product.brand;
 
-    const infoObj: InformationMap = { description, price };
+    const infoObj: InformationMap = { description, price, brand };
     const productMap: Record<string, InformationMap> = { [upc]: infoObj };
 
     result.push(productMap);
