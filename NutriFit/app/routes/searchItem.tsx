@@ -4,6 +4,7 @@ import searchIcon from "~/assets/search.png";
 import SearchGetStarted from "~/components/placeHolders/searchGetStarted";
 import ProductCard from "~/components/productCard";
 import ProductModal from "~/components/productModal";
+import { useAccount } from "~/persistence/accountContext";
 
 interface NutritionItem {
   description: string;
@@ -27,6 +28,7 @@ interface NutritionItem {
 }
 
 export default function SearchItem() {
+  const { account } = useAccount();
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<NutritionItem[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -37,54 +39,20 @@ export default function SearchItem() {
 
     try {
       setError(null);
-
       console.log(`Searching for: ${query}`);
 
-      const mockResults: NutritionItem[] = [
-        {
-          description: "Harris Teeter™ 2% Reduced Fat Milk",
-          price: 2.19,
-          upc: "072036738134",
-          brand: "Harris Teeter",
-          serving_weight_grams: null,
-          nf_metric_qty: 240,
-          nf_metric_uom: "ml",
-          nf_total_fat: 5,
-          nf_saturated_fat: 3,
-          nf_calories: 150,
-          nf_protein: 8,
-          nf_total_carbohydrate: 12,
-          nf_dietary_fiber: 0,
-          nf_sugars: 12,
-          nf_sodium: 105,
-          nf_cholesterol: 20,
-          photo: "https://assets.syndigo.com/143d8d9c-c0f7-441f-8bab-8ee97a903d15",
-          rating: 85,
-        },
-        {
-          description: "Harris Teeter 2% Reduced Fat Milk",
-          price: 3.79,
-          upc: "072036738059",
-          brand: "Harris Teeter",
-          serving_weight_grams: null,
-          nf_metric_qty: 240,
-          nf_metric_uom: "ml",
-          nf_calories: 160,
-          nf_total_fat: 5,
-          nf_saturated_fat: 3,
-          nf_protein: 8,
-          nf_total_carbohydrate: 12,
-          nf_dietary_fiber: 0,
-          nf_sugars: 12,
-          nf_sodium: 105,
-          nf_cholesterol: 20,
-          photo: "https://assets.syndigo.com/f4ecad91-138d-4f88-9b49-bedc62814990",
-          rating: 85,
-        },
-      ];
+      const res = await fetch(`http://localhost:3636/api/grocery/searchItem?searchTerm=${query}&goal=${account?.nutritionGoal || "bulking"}`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
 
-      setResults(mockResults);
+      if (!res.ok) {
+        throw new Error("API request failed");
+      }
+      const data: NutritionItem[] = await res.json();
+      setResults(data);
     } catch (err) {
+      console.error(err);
       setError("Something went wrong. Please try again.");
     }
   };
