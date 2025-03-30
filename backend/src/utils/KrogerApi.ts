@@ -7,7 +7,6 @@ import { AccessTokenResponse, ProductDataResponse, LocationDataResponse, Product
 let locationId: string | null = null;
 let accessToken: string | null = null;
 let tokenExpiresAt: number | null = null;
-let zipCode: number | null = null;
 
 
 async function fetchAccessToken(): Promise<void> {
@@ -39,7 +38,7 @@ async function ensureAccessToken(): Promise<void> {
   }
 }
 
-export async function fetchLocationId(zipCode: number): Promise<void> {
+async function fetchLocationId(zipCode: number): Promise<void> {
   zipCode = zipCode;
   await ensureAccessToken();
   const response = await fetch (`https://api.kroger.com/v1/locations?filter.zipCode.near=${zipCode}`, {
@@ -90,8 +89,9 @@ export async function getProducts(zipCode: number, searchTerm: string, searchLim
   }
 
   let result: CleanKrogerProductData = [];
-  const json = await response.json() as ProductDataResponse; // {upc: {description: string, price: number}}
+  const json = await response.json() as ProductDataResponse;
   const products = json.data as Array<ProductObject>;
+
   for (const product of products) {
 
     const description = product.description;

@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { getProducts, fetchLocationId } from '../utils/Kroger_api';
+import { getProducts } from '../utils/KrogerApi';
 import { CleanKrogerProductData } from '../types';
 
 export const searchItem = async (req: Request, res: Response, next: NextFunction) => {
