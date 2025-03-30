@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useAccount } from "~/persistence/accountContext";
 import NavBar from "~/components/navBar";
 import ProductCard from "~/components/productCard";
-
+import { useNavigate } from "react-router";
 interface NutritionItem {
   description: string;
   price: number;
@@ -25,13 +25,16 @@ interface NutritionItem {
 }
 
 export default function Profile() {
-  const { account } = useAccount();
+  const { account, setAccount } = useAccount();
   const [savedItems, setSavedItems] = useState<NutritionItem[]>([]);
   const [error, setError] = useState<string | null>(null);
-
+  
+  const navigate = useNavigate();
   useEffect(() => {
     console.log("ACCOUNT:", account);
-    if (!account) return; // Wait for account to be available
+    if (!account) {
+        navigate("/"); // redirect home if not logged in
+    }
     const fetchSavedItems = async () => {
       try {
         const res = await fetch(
@@ -55,11 +58,25 @@ export default function Profile() {
     <div>
       <NavBar />
       <div className="flex flex-col py-[4rem] px-[20rem]">
-        <h1 className="text-3xl font-bold text-[var(--color-text)]">Profile</h1>
+        <div className="flex justify-between items-center mt-4">
+          <h1 className="text-3xl font-bold text-[var(--color-text)]">
+            Profile
+          </h1>
+          <button
+            className="text-[var(--color-accent)] font-bold uppercase hover:underline cursor-pointer"
+            onClick={() => {
+              setAccount(null); // LOG OUT
+            }}
+          >
+            Sign Out
+          </button>
+        </div>{" "}
         {account ? (
           <>
             <div className="flex flex-col">
-              <p className="text-[var(--color-text-secondary)] font-medium">Welcome, {account.firstName}!</p>
+              <p className="text-[var(--color-text-secondary)] font-medium">
+                Welcome, {account.firstName}!
+              </p>
               <p className="text-[var(--color-text-secondary)] font-medium">
                 You are currently:{" "}
                 <span className="text-[var(--color-accent)] font-bold">
@@ -83,7 +100,6 @@ export default function Profile() {
             No account found.
           </p>
         )}
-
         <div className="mt-8">
           <h2 className="text-2xl font-semibold text-[var(--color-text)]">
             Saved Items
