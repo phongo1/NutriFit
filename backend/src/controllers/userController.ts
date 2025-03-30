@@ -53,19 +53,43 @@ export async function createUser(req: Request, res: Response, next: NextFunction
 
 
 export async function loginUser(req: Request, res: Response, next: NextFunction): Promise<void> {
-//  try {
-//   const {username, password} = req.body;
 
-//   const user = await collections.users?.findOne({ username});
-// if(!user || user.password !== password){
-//   res.status(401).json({ error: "Invalid username or password"});
-//   return;
-// }
-//   res.status(200).json({ message: "Login successful", userId: user._id });
-//  } catch (error) {
-//   console.error("Error loggin in:", error);
-//   res.status(500).send("Login failed");
-//  }
+  try {
+    const { username, password } = req.body;
+
+    if (!username || !password) {
+      res.status(400).json({ error: "Username and password are required" });
+      return;
+    }
+
+    await connectDB();
+
+    const user = await User.findOne({ username });
+
+    if (!user) {
+      res.status(401).json({ error: "Invalid username or password" });
+      return;
+    }
+
+    // No hashing, just a direct password comparison
+    if (user.password !== password) {
+      res.status(401).json({ error: "Invalid username or password" });
+      return;
+    }
+
+    res.status(200).json({
+      message: "Login successful",
+      userId: user._id,
+      username: user.username,
+      firstName: user.firstname,
+      lastName: user.lastname,
+      fitnessGoal: user.fitnessgoal,
+    });
+
+  } catch (error) {
+    console.error("Error logging in:", error);
+    res.status(500).send("Failed to log in");
+  }
 }
 
 export async function getSavedItems(req: Request, res: Response, next: NextFunction): Promise<void> {
