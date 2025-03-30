@@ -1,8 +1,15 @@
 import { Request, Response, NextFunction } from 'express';
+import { getProducts, fetchLocationId } from '../utils/Kroger_api';
+import { CleanKrogerProductData } from '../types';
 
-export const searchItem = (req: Request, res: Response, next: NextFunction) => {
+export const searchItem = async (req: Request, res: Response, next: NextFunction) => {
 
     const { searchTerm } = req.body;
+    const zipCode: number = 22903; // TODO: get this from the user
+    const searchLimit: number = req.body.searchLimit || 10; 
+    const searchResults: CleanKrogerProductData  = await getProducts(zipCode, searchTerm, searchLimit);
+    
+
     // use the search term in the kroger search filter.term=milk
     // limit the search to about 20-50 filter.limit=1-50
     // brand filter.brand=brand
