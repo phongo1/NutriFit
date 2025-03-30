@@ -11,6 +11,9 @@ export interface Config {
   redirectUri: string;
   scope: string;
   oauthUrl: string;
+  nutritionixApiKey: string;
+  nutritionixAppId: string;
+  nutritionixUrl: string;
 }
 
 export interface InformationMap {
