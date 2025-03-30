@@ -43,6 +43,7 @@ export async function combineProductWithNutrinix(productData: CleanKrogerProduct
 
       const fullData: AlmostFinishedProduct = {
         "description": info.description,
+        "nf_calories": nutriInfo.nf_calories,
         "price": info.price,
         "upc": upcCode,
         "brand": info.brand,

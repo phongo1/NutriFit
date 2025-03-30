@@ -55,6 +55,7 @@ export interface NutrinixReponse {
   "nf_sugars": number | null,
   "nf_sodium": number | null,
   "nf_cholesterol": number | null,
+  "nf_calories": number | null,
   "photo": {"thumb": string | null},
 }
 
@@ -67,6 +68,7 @@ export interface AlmostFinishedProduct {
   "nf_metric_qty": number | null,
   "nf_metric_uom": string | null,
   "nf_total_fat": number | null,
+  "nf_calories": number | null,
   "nf_saturated_fat": number | null,
   "nf_protein": number | null,
   "nf_total_carbohydrate": number | null,
@@ -82,6 +84,7 @@ export interface FullyFinishedProduct {
   "price": number;
   "upc": string;
   "brand": string;
+  "nf_calories": number | null,
   "serving_weight_grams": number | null,
   "nf_metric_qty": number | null,
   "nf_metric_uom": string | null,

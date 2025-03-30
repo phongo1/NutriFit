@@ -22,8 +22,6 @@ export const searchItem = async (req: Request, res: Response, next: NextFunction
     const almostFullData = await combineProductWithNutrinix(searchResults);
     const fullData: FullyFinishedProduct[] = [];
 
-    // pass through the algorithm 
-    // need to somehow get the fitness goal
     const goal: string = req.body.goal;
     for (const product of almostFullData) {
         const rating = getScore(goal, product);
@@ -44,6 +42,7 @@ export const searchItem = async (req: Request, res: Response, next: NextFunction
             "nf_sodium": product.nf_sodium,
             "nf_cholesterol": product.nf_cholesterol,
             "photo": product.photo,
+            "nf_calories": product.nf_calories,
             "rating": rating
         }
         fullData.push(fullProduct);
