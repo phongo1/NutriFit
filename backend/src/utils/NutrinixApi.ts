@@ -1,13 +1,13 @@
 import config from '../config/config';
 import fetch from 'node-fetch';
-import { NutrinixReponse, CleanKrogerProductData, FullyFinishedProduct } from '../types';
+import { NutrinixReponse, CleanKrogerProductData, AlmostFinishedProduct } from '../types';
 import { getBarcode } from './UpcCalculator';
 
-export async function combineProductWithNutrinix(productData: CleanKrogerProductData): Promise<FullyFinishedProduct[]> {
+export async function combineProductWithNutrinix(productData: CleanKrogerProductData): Promise<AlmostFinishedProduct[]> {
   const nutritionixApiKey = config.nutritionixApiKey;
   const nutritionixAppId = config.nutritionixAppId;
   const nutritionixUrl = config.nutritionixUrl;
-  const result: FullyFinishedProduct[] = [];
+  const result: AlmostFinishedProduct[] = [];
 
   for (const upc in productData) {
     const infoMap = productData[upc];
@@ -36,7 +36,7 @@ export async function combineProductWithNutrinix(productData: CleanKrogerProduct
 
     else {
       const data = await response.json() as NutrinixReponse;
-      const fullData: FullyFinishedProduct = {
+      const fullData: AlmostFinishedProduct = {
         "description": description,
         "price": price,
         "upc": upcCode,
