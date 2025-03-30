@@ -8,8 +8,8 @@ const NavBar = () => {
   const isAuthPage = location.pathname === "/login" || location.pathname === "/signup";
 
   return (
-    <nav className="sticky top-0 z-50 bg-[var(--color-app-bg)] shadow-sm">
-      <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+    <nav className="sticky top-0 z-50 bg-[var(--color-app-bg)] shadow-sm w-screen h-17">
+      <div className="max-w-7xl mx-auto px-4 py-3 flex items-center align-center justify-between w-full h-full">
         <div className="flex items-center">
           <img src={logo} alt="NutriFit Logo" className="h-8 w-8 mr-2" />
           <NavLink className="text-xl font-semibold text-[var(--color-text)]" to="/" end>

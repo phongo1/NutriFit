@@ -7,8 +7,9 @@ export default function Home() {
   }, []);
 
   return (
-    <div>
-      <NavBar/>
+    <div className='flex flex-col justify-center items-center pb-10 px-10'>
+      <NavBar />
+      HELLO
     </div>
   );
 }
