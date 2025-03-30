@@ -14,15 +14,20 @@ interface RequestBody {
     searchLimit: string;
   }
 
-export const searchItem = async (req: Request, res: Response, next: NextFunction) => {
-    const searchTerm  = req.body.searchTerm;
+export const searchItem = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    const searchTerm = req.query.searchTerm as string;
+    if (!searchTerm) {
+        res.status(400).json({ error: "Search term is required" });
+        return;
+    }
+
     const zipCode: number = 22903; // TODO: get this from the user
     const searchLimit: number = req.body.searchLimit || 10; 
     const searchResults: CleanKrogerProductData  = await getProducts(zipCode, searchTerm, searchLimit);
     const almostFullData = await combineProductWithNutrinix(searchResults);
     const fullData: FullyFinishedProduct[] = [];
 
-    const goal: string = req.body.goal;
+    const goal = req.query.goal as string;
     for (const product of almostFullData) {
         const rating = getScore(goal, product);
         const fullProduct: FullyFinishedProduct = {
