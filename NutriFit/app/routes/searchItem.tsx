@@ -5,7 +5,7 @@ import SearchGetStarted from "~/components/placeHolders/searchGetStarted";
 import ProductCard from "~/components/productCard";
 import ProductModal from "~/components/productModal";
 import { useAccount } from "~/persistence/accountContext";
-
+import { useNavigate } from "react-router";
 interface NutritionItem {
   description: string;
   price: number;
@@ -63,6 +63,28 @@ export default function SearchItem() {
       setError("Something went wrong. Please try again.");
     }
   };
+  const navigate = useNavigate();
+  const onSave = async (userId: any, item: NutritionItem) => {
+    try {
+        const response = await fetch("http://localhost:3636/api/user/addSavedItem", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ userId, item }),
+        });
+
+        if (!response.ok) {
+            throw new Error(`Failed to save item: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        console.log("Item saved successfully:", data);
+        navigate("/profile");
+    } catch (error) {
+        console.error("Error saving item:", error);
+    }
+};
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
@@ -131,10 +153,8 @@ export default function SearchItem() {
           isOpen={!!selectedProduct}
           product={selectedProduct!}
           onClose={() => setSelectedProduct(null)}
-          onSave={() => {
-            console.log("Saved:", selectedProduct);
-            setSelectedProduct(null);
-          }}
+          onSave={onSave}
+          account={account}
         />
       </div>
     </>

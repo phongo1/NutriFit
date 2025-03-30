@@ -30,58 +30,20 @@ export default function Profile() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // Simulate a GET request to fetch saved items for the user
+    console.log("ACCOUNT:", account);
+    if (!account) return; // Wait for account to be available
     const fetchSavedItems = async () => {
       try {
-        await new Promise((res) => setTimeout(res, 500));
-
-        // Mock saved items data
-        const mockResults: NutritionItem[] = [
-          {
-            description: "Harris Teeter™ 2% Reduced Fat Milk",
-            price: 2.19,
-            upc: "072036738134",
-            brand: "Harris Teeter",
-            serving_weight_grams: null,
-            nf_metric_qty: 240,
-            nf_metric_uom: "ml",
-            nf_total_fat: 5,
-            nf_calories: 120,
-            nf_saturated_fat: 3,
-            nf_protein: 8,
-            nf_total_carbohydrate: 12,
-            nf_dietary_fiber: 0,
-            nf_sugars: 12,
-            nf_sodium: 105,
-            nf_cholesterol: 20,
-            photo:
-              "https://assets.syndigo.com/143d8d9c-c0f7-441f-8bab-8ee97a903d15",
-            rating: 85,
-          },
-          {
-            description: "Harris Teeter 2% Reduced Fat Milk",
-            price: 3.79,
-            upc: "072036738059",
-            brand: "Harris Teeter",
-            serving_weight_grams: null,
-            nf_calories: 150,
-            nf_metric_qty: 240,
-            nf_metric_uom: "ml",
-            nf_total_fat: 5,
-            nf_saturated_fat: 3,
-            nf_protein: 8,
-            nf_total_carbohydrate: 12,
-            nf_dietary_fiber: 0,
-            nf_sugars: 12,
-            nf_sodium: 105,
-            nf_cholesterol: 20,
-            photo:
-              "https://assets.syndigo.com/f4ecad91-138d-4f88-9b49-bedc62814990",
-            rating: 85,
-          },
-        ];
-        setSavedItems(mockResults);
+        const res = await fetch(
+          `http://localhost:3636/api/user/getSavedItems?userId=${account.userId}`
+        );
+        if (!res.ok) {
+          throw new Error("API error");
+        }
+        const data: NutritionItem[] = await res.json();
+        setSavedItems(data);
       } catch (err) {
+        console.error(err);
         setError("Failed to load saved items.");
       }
     };
@@ -96,17 +58,23 @@ export default function Profile() {
         <h1 className="text-3xl font-bold text-[var(--color-text)]">Profile</h1>
         {account ? (
           <>
-            <p className="text-xl text-[var(--color-text-secondary)] mt-2">
-              Welcome, {account.name}!
-            </p>
+            <div className="flex flex-col">
+              <p className="text-[var(--color-text-secondary)] font-medium">Welcome, {account.firstName}!</p>
+              <p className="text-[var(--color-text-secondary)] font-medium">
+                You are currently:{" "}
+                <span className="text-[var(--color-accent)] font-bold">
+                  {account.fitnessGoal.toUpperCase()}
+                </span>
+              </p>
+            </div>
             {account.nutritionGoal && (
               <div className="mt-1 text-lg flex gap-2">
-                  <p className="text-[var(--color-text-secondary)]">
-                    Nutritional Goal:
-                  </p>
-                  <p className="text-[var(--color-accent)] font-semibold">
-                    {account.nutritionGoal.toUpperCase()}
-                  </p>
+                <p className="text-[var(--color-text-secondary)]">
+                  Nutritional Goal:
+                </p>
+                <p className="text-[var(--color-accent)] font-semibold">
+                  {account.nutritionGoal.toUpperCase()}
+                </p>
               </div>
             )}
           </>
@@ -133,11 +101,7 @@ export default function Profile() {
                 key={item.upc}
                 serving_qty={item.nf_metric_qty}
                 serving_unit={item.nf_metric_uom}
-                nf_calories={
-                  item.nf_total_fat * 9 +
-                  item.nf_protein * 4 +
-                  item.nf_total_carbohydrate * 4
-                }
+                nf_calories={item.nf_calories}
                 nf_saturated_fat={item.nf_saturated_fat}
                 nf_sodium={item.nf_sodium}
                 nf_total_carbohydrate={item.nf_total_carbohydrate}

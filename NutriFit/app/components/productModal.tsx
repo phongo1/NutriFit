@@ -3,8 +3,9 @@ import React from "react";
 interface ProductModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSave: () => void;
+  onSave: any;
   product: any
+  account: any
 }
 
 const ProductModal: React.FC<ProductModalProps> = ({
@@ -12,6 +13,7 @@ const ProductModal: React.FC<ProductModalProps> = ({
   onClose,
   onSave,
   product,
+  account
 }) => {
   if (!isOpen) return null;
 
@@ -77,7 +79,7 @@ const ProductModal: React.FC<ProductModalProps> = ({
             Close
           </button>
           <button
-            onClick={onSave}
+            onClick={() => onSave(account.userId, product)}
             className="px-4 py-2 text-sm font-semibold bg-[var(--color-accent)] text-white rounded hover:brightness-110 cursor-pointer"
           >
             Save Item
