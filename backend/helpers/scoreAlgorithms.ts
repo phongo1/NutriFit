@@ -74,7 +74,7 @@ function scoreBulkingProteinFocused(product) {    //focus on protein, carbs, and
   
     // Normalize serving weight
     const servingGrams = normalizeServingGrams(serving_weight_grams, nf_metric_qty, nf_metric_uom);
-    if (!servingGrams || hasMissingNutrients(fat, protein, carbs, sugars, sodium, cholesterol)) return null;
+    if (!servingGrams) return null;
   
     // Convert to % of serving weight
     const fatPct = (fat / servingGrams) * 100;
@@ -135,10 +135,10 @@ function scoreBulkingProteinFocused(product) {    //focus on protein, carbs, and
       serving_weight_grams,
       nf_metric_qty,
       nf_metric_uom,
-      nf_total_fat: fat,
+      nf_total_fat: fat = 0,
       nf_saturated_fat: satFat = 0,
-      nf_protein: protein,
-      nf_total_carbohydrate: carbs,
+      nf_protein: protein = 0,
+      nf_total_carbohydrate: carbs = 0,
       nf_dietary_fiber: fiber = 0,
       nf_sugars: sugars = 0,
       nf_sodium: sodium = 0,
@@ -146,8 +146,7 @@ function scoreBulkingProteinFocused(product) {    //focus on protein, carbs, and
     } = product;
   
     const servingGrams = normalizeServingGrams(serving_weight_grams, nf_metric_qty, nf_metric_uom);
-    if (!servingGrams || hasMissingNutrients(fat, protein, carbs, sugars, sodium, cholesterol)) return null;
-  
+    if (!servingGrams) return null;  
     const fatPct = (fat / servingGrams) * 100;
     const proteinPct = (protein / servingGrams) * 100;
     const carbPct = (carbs / servingGrams) * 100;
@@ -193,22 +192,21 @@ function scoreBulkingProteinFocused(product) {    //focus on protein, carbs, and
 
   function scoreKetoSoftCapped(product) {     //Keto diet     low carbs with high fats, no sugar
     const {
-        serving_weight_grams,
-        nf_metric_qty,
-        nf_metric_uom,
-        nf_total_fat: fat,
-        nf_saturated_fat: satFat = 0,
-        nf_protein: protein,
-        nf_total_carbohydrate: carbs,
-        nf_dietary_fiber: fiber = 0,
-        nf_sugars: sugars = 0,
-        nf_sodium: sodium = 0,
-        nf_cholesterol: cholesterol = 0
-      } = product;
+      serving_weight_grams,
+      nf_metric_qty,
+      nf_metric_uom,
+      nf_total_fat: fat = 0,
+      nf_saturated_fat: satFat = 0,
+      nf_protein: protein = 0,
+      nf_total_carbohydrate: carbs = 0,
+      nf_dietary_fiber: fiber = 0,
+      nf_sugars: sugars = 0,
+      nf_sodium: sodium = 0,
+      nf_cholesterol: cholesterol = 0
+    } = product;
   
     const servingGrams = normalizeServingGrams(serving_weight_grams, nf_metric_qty, nf_metric_uom);
-    if (!servingGrams || hasMissingNutrients(fat, protein, carbs, sugars, sodium, cholesterol)) return null;
-  
+    if (!servingGrams) return null;  
     const netCarbs = Math.max(carbs - fiber, 0);
   
     const fatPct = (fat / servingGrams) * 100;
@@ -272,10 +270,10 @@ function scoreBulkingProteinFocused(product) {    //focus on protein, carbs, and
       serving_weight_grams,
       nf_metric_qty,
       nf_metric_uom,
-      nf_total_fat: fat,
+      nf_total_fat: fat = 0,
       nf_saturated_fat: satFat = 0,
-      nf_protein: protein,
-      nf_total_carbohydrate: carbs,
+      nf_protein: protein = 0,
+      nf_total_carbohydrate: carbs = 0,
       nf_dietary_fiber: fiber = 0,
       nf_sugars: sugars = 0,
       nf_sodium: sodium = 0,
@@ -283,8 +281,8 @@ function scoreBulkingProteinFocused(product) {    //focus on protein, carbs, and
     } = product;
   
     const servingGrams = normalizeServingGrams(serving_weight_grams, nf_metric_qty, nf_metric_uom);
-    if (!servingGrams || hasMissingNutrients(fat, protein, carbs, sugars, sodium, cholesterol)) return null;
-  
+    if (!servingGrams) return null;
+
     const fatPct = (fat / servingGrams) * 100;
     const proteinPct = (protein / servingGrams) * 100;
     const carbPct = (carbs / servingGrams) * 100;
