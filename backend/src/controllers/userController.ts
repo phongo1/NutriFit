@@ -93,7 +93,24 @@ export async function loginUser(req: Request, res: Response, next: NextFunction)
 }
 
 export async function getSavedItems(req: Request, res: Response, next: NextFunction): Promise<void> {
-  // TODO: stub
+  try {
+    const userId = req.query.userId;
+    if (!userId) {
+      res.status(400).json({ error: "User ID is required" });
+      return;
+    }
+    await connectDB();
+    const user = await User.findById(userId);
+    if (!user) {
+      res.status(404).json({ error: "User not found" });
+      return;
+    }
+    res.status(200).json(user.saveditems);
+  }
+  catch (error) {
+    console.error("Error fetching saved items:", error);
+    res.status(500).send("Failed to fetch saved items");
+  }
 }
 
 export async function updateNutritionPlan(req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -101,5 +118,29 @@ export async function updateNutritionPlan(req: Request, res: Response, next: Nex
 }
 
 export async function addSavedItem(req: Request, res: Response, next: NextFunction): Promise<void> {
-  // TODO: stub
+  try {
+    const userId = req.body.userId;
+    const item = req.body.item;
+
+    if (!userId || !item) {
+      res.status(400).json({ error: "User ID, item name, and item details are required" });
+      return;
+    }
+
+    await connectDB();
+    const user = await User.findById(userId);
+    if (!user) {
+      res.status(404).json({ error: "User not found" });
+      return;
+    }
+
+    user.saveditems.push(item);
+    await user.save();
+
+    res.status(200).json(user.saveditems);
+  }
+  catch (error) {
+    console.error("Error adding saved item:", error);
+    res.status(500).send("Failed to add saved item");
+  }
 }
