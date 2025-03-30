@@ -32,7 +32,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
   description,
 }) => {
   return (
-    <div className="p-4 bg-white rounded-xl shadow border border-gray-100 flex flex-col gap-4 w-[22rem] h-[22rem] mt-[3rem] cursor-pointer hover:scale-102 transition duration-200 ease-in-out">
+    <div className="p-4 pb-[1rem] bg-white rounded-xl shadow border border-gray-100 flex flex-col gap-4 w-[22rem] h-auto mt-[3rem] cursor-pointer hover:scale-102 transition duration-200 ease-in-out">
       <div className="flex justify-between items-center">
         <h1 className="text-lg font-bold text-[var(--color-text)]">{brand}</h1>
         <div className="flex items-center justify-center bg-red-500 text-white font-bold rounded-full w-8 h-8">

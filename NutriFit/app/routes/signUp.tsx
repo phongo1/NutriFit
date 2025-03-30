@@ -27,25 +27,28 @@ export default function SignUp() {
 
     try {
       setError(null);
-
-      const res = await fetch("/api/signup", {
+        console.log('GOAL:', goal)
+      const res = await fetch("http://localhost:3636/api/user/createUser", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          name,
-          email,
-          password,
-          lifestyleGoal: goal,
+          firstName: name,
+          lastName : 'Lam',
+          username: email,
+          password: password,
+          fitnessGoal: goal,
         }),
       });
 
       if (!res.ok) {
         throw new Error("Signup failed");
       }
-
+      console.log('SUCCESS RES:', res)
       const data = await res.json();
       setAccount(data); // Save to context
+      navigate("/searchItem");
     } catch (err) {
+        console.log('ERROR:', err);
       setError("Signup failed. Please try again.");
     }
   };
@@ -102,17 +105,17 @@ export default function SignUp() {
           />
           <select
             value={goal}
-            onChange={(e) => setGoal(e.target.value)}
+            onChange={(e) => setGoal(e.target.value.toLowerCase())}
             className={`border border-gray-300 rounded-md p-2 ${!goal ? "text-[#ACACAC]" : ""}`}
             required
           >
             <option value="" disabled>
               (Select nutritional goal)
             </option>
-            <option value="Bulking">Bulking</option>
-            <option value="Cutting">Cutting</option>
-            <option value="Keto">Keto</option>
-            <option value="Diabetic">Diabetic</option>
+            <option value="bulking">Bulking</option>
+            <option value="cutting">Cutting</option>
+            <option value="keto">Keto</option>
+            <option value="diabetic">Diabetic</option>
           </select>
 
           {error && <p className="text-red-500 text-sm">{error}</p>}

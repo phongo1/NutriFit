@@ -32,7 +32,9 @@ export default function SearchItem() {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<NutritionItem[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const [selectedProduct, setSelectedProduct] = useState<NutritionItem | null>(null);
+  const [selectedProduct, setSelectedProduct] = useState<NutritionItem | null>(
+    null
+  );
 
   const handleSearch = async () => {
     if (!query.trim()) return;
@@ -41,10 +43,15 @@ export default function SearchItem() {
       setError(null);
       console.log(`Searching for: ${query}`);
 
-      const res = await fetch(`http://localhost:3636/api/grocery/searchItem?searchTerm=${query}&goal=${account?.nutritionGoal || "bulking"}`, {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-      });
+      const res = await fetch(
+        `http://localhost:3636/api/grocery/searchItem?searchTerm=${query}&goal=${
+          account?.nutritionGoal || "bulking"
+        }`,
+        {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        }
+      );
 
       if (!res.ok) {
         throw new Error("API request failed");
@@ -101,20 +108,20 @@ export default function SearchItem() {
                 className="cursor-pointer"
               >
                 <ProductCard
-                  serving_qty={item.nf_metric_qty}
+                  serving_qty={Math.round(item.nf_metric_qty)}
                   serving_unit={item.nf_metric_uom}
-                  nf_calories={item.nf_calories}
-                  nf_saturated_fat={item.nf_saturated_fat}
-                  nf_sodium={item.nf_sodium}
-                  nf_total_carbohydrate={item.nf_total_carbohydrate}
-                  nf_dietary_fiber={item.nf_dietary_fiber}
-                  nf_sugars={item.nf_sugars}
-                  nf_protein={item.nf_protein}
+                  nf_calories={Math.round(item.nf_calories)}
+                  nf_saturated_fat={Math.round(item.nf_saturated_fat)}
+                  nf_sodium={Math.round(item.nf_sodium)}
+                  nf_total_carbohydrate={Math.round(item.nf_total_carbohydrate)}
+                  nf_dietary_fiber={Math.round(item.nf_dietary_fiber)}
+                  nf_sugars={Math.round(item.nf_sugars)}
+                  nf_protein={Math.round(item.nf_protein)}
                   photo={item.photo}
-                  rating={item.rating}
+                  rating={Math.round(item.rating)}
                   brand={item.brand}
                   description={item.description}
-                />
+                />{" "}
               </div>
             ))}
           </div>
