@@ -1,10 +1,25 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
-export interface SavedItem {
-  name: string;
-  details: string;
-  createdAt: Date;
-}
+const FullyFinishedProductSchema = new Schema({
+  description: { type: String, required: true },
+  price: { type: Number, required: true },
+  upc: { type: String, required: true },
+  brand: { type: String, required: true },
+  nf_calories: { type: Number, default: null },
+  serving_weight_grams: { type: Number, default: null },
+  nf_metric_qty: { type: Number, default: null },
+  nf_metric_uom: { type: String, default: null },
+  nf_total_fat: { type: Number, default: null },
+  nf_saturated_fat: { type: Number, default: null },
+  nf_protein: { type: Number, default: null },
+  nf_total_carbohydrate: { type: Number, default: null },
+  nf_dietary_fiber: { type: Number, default: null },
+  nf_sugars: { type: Number, default: null },
+  nf_sodium: { type: Number, default: null },
+  nf_cholesterol: { type: Number, default: null },
+  photo: { type: String, default: null },
+  rating: { type: Number, default: null },
+});
 
 export interface UserDocument extends Document {
   username: string;
@@ -12,14 +27,8 @@ export interface UserDocument extends Document {
   lastname: string;
   password: string;
   fitnessgoal: 'bulking' | 'cutting' | 'keto' | 'diabetic';
-  saveditems: SavedItem[];
+  saveditems: typeof FullyFinishedProductSchema[];
 }
-
-const SavedItemSchema = new Schema<SavedItem>({
-  name: { type: String, required: true },
-  details: { type: String, required: true },
-  createdAt: { type: Date, default: Date.now },
-});
 
 const UserSchema = new Schema<UserDocument>({
   username: { type: String, required: true, unique: true },
@@ -31,7 +40,7 @@ const UserSchema = new Schema<UserDocument>({
     required: true, 
     enum: ['bulking', 'cutting', 'keto', 'diabetic'] 
   },
-  saveditems: { type: [SavedItemSchema], default: [] },
+  saveditems: { type: [FullyFinishedProductSchema], default: [] },
 }, { timestamps: true });
 
 const User = mongoose.model<UserDocument>('User', UserSchema);
