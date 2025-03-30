@@ -11,7 +11,22 @@ interface LocationDataResponse {
   data: Array<{ "locationId": string}>;
 };
 
+interface ItemObject {
+  "price": {"regular": number}
+}
 
+interface ProductObject {
+  "upc": string;
+  "description": string;
+  "items": Array<ItemObject>;
+  "brand": string;
+}
+
+interface ProductDataResponse {
+  data: Array<ProductObject>;
+}
+
+// Storing access token and location ID in memory
 let locationId: string | null = null;
 let accessToken: string | null = null;
 let tokenExpiresAt: number | null = null;
@@ -67,14 +82,18 @@ async function fetchLocationId(zipCode: number): Promise<void> {
   }
 }
 
-async function getProducts(locationId: string, searchTerm: string, searchLimit: number = 10): Promise<Array<Map<string, number>>> {
+async function getProducts(zipCode: number, locationId: string, searchTerm: string, searchLimit: number = 10): Promise<Array<Map<string, Map<string, any>>>> {
   await ensureAccessToken();
+  if (!locationId) {
+    fetchLocationId(zipCode);
+  }
   const encodedSearchTerm = encodeURIComponent(searchTerm);
   const encodedLocationId = encodeURIComponent(locationId);
   const encodedSearchLimit = encodeURIComponent(searchLimit.toString());
   const encodedAccessToken = encodeURIComponent(accessToken as string);
+  const url = `https://api.kroger.com/v1/products?filter.locationId=${encodedLocationId}&filter.term=${encodedSearchTerm}&filter.limit=${encodedSearchLimit}`;
 
-  const response = await fetch(`https://api.kroger.com/v1/products?filter.locationId=${encodedLocationId}&filter.term=${encodedSearchTerm}&filter.limit=${encodedSearchLimit}}`, {
+  const response = await fetch(url, {
     method: 'GET',
     headers: {
       "Accept": "application/json",
@@ -86,16 +105,22 @@ async function getProducts(locationId: string, searchTerm: string, searchLimit: 
     throw new Error(`Error fetching products: ${response.statusText}`);
   }
 
-  let result: Array<Map<string, number>> = [];
-  const json = await response.json() as { data: Array<Map<string, Map<string, string>>> }; // {upc: {description: string, price: number}}
-  const products = json.data;
+  let result: Array<Map<string, Map<string, any>>> = [];
+  const json = await response.json() as ProductDataResponse; // {upc: {description: string, price: number}}
+  const products = json.data as Array<ProductObject>;
   for (const product of products) {
     // description, price, upc
+    const description = product.description;
+    const price = product.items[0].price.regular;
+    const upc = product.upc;
+    const infoMap = new Map<string, any>();
+    infoMap.set("description", description);
+    infoMap.set("price", price);
+    const productMap = new Map<string, Map<string, any>>();
+    productMap.set(upc, infoMap);
+    result.push(productMap);
   }
   return result;
-
-
-
 }
 
 // async function saveAccessToken(token: string, expiresIn: number) {
