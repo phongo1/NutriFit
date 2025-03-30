@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import NavBar from "../components/navBar";
 
 export default function Home() {
   useEffect(() => {
@@ -7,7 +8,7 @@ export default function Home() {
 
   return (
     <div>
-      Home
+      <NavBar/>
     </div>
   );
 }
