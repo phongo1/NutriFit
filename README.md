@@ -2,6 +2,9 @@
 
 **NutriFit** is a health and wellness app focused on helping users make smarter dietary choices. It provides an intuitive way to compare nutrition labels and break down macronutrients between branded food items. NutriFit makes finding food products that most optimize your dietary goals .
 
+## DEMO:
+https://youtu.be/IsOXYTIol4M
+
 ## Features
 
 - Nutrition comparison between branded food items
