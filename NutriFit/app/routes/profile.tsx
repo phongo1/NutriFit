@@ -57,7 +57,7 @@ export default function Profile() {
   return (
     <div>
       <NavBar />
-      <div className="flex flex-col py-[4rem] px-[10rem]">
+      <div className="flex flex-col py-[4rem] px-[20rem]">
         <div className="flex justify-between items-center mt-4">
           <h1 className="text-3xl font-bold text-[var(--color-text)]">
             Profile

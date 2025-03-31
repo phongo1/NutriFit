@@ -87,8 +87,13 @@ export default function Login() {
           </button>
         </form>
         <p className="text-xl self-center mt-[6rem] flex gap-2">
+<<<<<<< HEAD
           <span className="text-[#ACACAC] font-medium">Don’t have an account? </span>
           <span className="text-[var(--color-accent)] font-medium cursor-pointer" onClick={handleSignupClick}>Sign up here</span>
+=======
+          <p className="text-[#ACACAC] font-medium">Don’t have an account? </p>
+          <p className="text-[var(--color-accent)] font-medium cursor-pointer" onClick={handleSignupClick}>Sign up here</p>
+>>>>>>> 541b2199ef2908135e714e41d98b087471feba35
         </p>
       </div>
     </div>
