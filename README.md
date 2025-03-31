@@ -30,7 +30,7 @@ cd Nutrifit
 ```bash
 npm install
 ```
-3. Add a .env file with your configuration:
+3. Add a .env file to the 'backend' directory root with your configuration:
 
 ```ini
 KROGER_CLIENT_ID = 'xxx'
