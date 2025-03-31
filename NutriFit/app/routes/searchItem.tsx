@@ -6,7 +6,9 @@ import ProductCard from "~/components/productCard";
 import ProductModal from "~/components/productModal";
 import { useAccount } from "~/persistence/accountContext";
 import { useNavigate } from "react-router";
-import { HashLoader } from "react-spinners";
+import pkg from 'react-spinners';
+
+const {HashLoader} = pkg;
 
 interface NutritionItem {
   description: string;
