@@ -5,6 +5,9 @@
 ## DEMO:
 [Youtube Demo](https://youtu.be/yYXho5SDZvs)
 
+## DEPOST Link:
+[Devpost](https://devpost.com/software/nutrifit-yhqj6p)
+
 
 ## Features
 
